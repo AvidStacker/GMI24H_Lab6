@@ -8,44 +8,90 @@ namespace GMI24H_VT25_SortSearch_Labb_
 {
     public static class Benchmark
     {
-        private const string LogFilePath = "benchmark_results.txt";
+        private const string CsvFilePath = "benchmark_results.csv";
 
-        public static void MeasureExecutionTime<T>(
+        // 🔁 Benchmark för sorteringsalgoritmer
+        public static void MeasureSortExecutionTime<T>(
             string algorithmName,
-            Func<IList<T>> dataGenerator,        // Generates fresh data per run
-            Action<IList<T>> sortAlgorithm,      // Sorting algorithm that modifies the list
+            Func<IList<T>> dataGenerator,
+            Action<IList<T>> sortAlgorithm,
             int runs = 5,
             int previewCount = 5)
         {
             List<long> executionTimes = new();
 
-            Console.WriteLine($"\n--- Benchmarking {algorithmName} ({runs} runs) ---");
+            Console.WriteLine($"\n--- Benchmarking Sort: {algorithmName} ({runs} runs) ---");
 
-            for (int i = 0; i < runs; i++)
+            // Skapa CSV-fil med header om den inte finns
+            bool newFile = !File.Exists(CsvFilePath);
+            using (var writer = new StreamWriter(CsvFilePath, append: true))
             {
-                IList<T> data = dataGenerator();  // Fresh list each run
-                Stopwatch sw = Stopwatch.StartNew();
-                sortAlgorithm(data);              // Sort in-place
-                sw.Stop();
+                if (newFile)
+                {
+                    writer.WriteLine("Timestamp,Algorithm,Run,TimeMs");
+                }
 
-                long elapsed = sw.ElapsedMilliseconds;
-                executionTimes.Add(elapsed);
-                Console.WriteLine($"Run {i + 1}: {elapsed} ms");
+                for (int i = 0; i < runs; i++)
+                {
+                    IList<T> data = dataGenerator();
+                    Stopwatch sw = Stopwatch.StartNew();
+                    sortAlgorithm(data);
+                    sw.Stop();
+
+                    long elapsed = sw.ElapsedMilliseconds;
+                    executionTimes.Add(elapsed);
+
+                    Console.WriteLine($"Run {i + 1}: {elapsed} ms");
+
+                    writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss},{algorithmName},Run {i + 1},{elapsed}");
+                }
             }
 
             double avgTime = executionTimes.Average();
             double stdDev = Math.Sqrt(executionTimes.Average(x => Math.Pow(x - avgTime, 2)));
 
-            string result = $"{DateTime.Now}: {algorithmName} - Avg: {avgTime:F2} ms, StdDev: {stdDev:F2} ms over {runs} runs";
-            File.AppendAllText(LogFilePath, result + Environment.NewLine);
-
-            Console.WriteLine(result);
+            Console.WriteLine($"Avg: {avgTime:F2} ms, StdDev: {stdDev:F2} ms över {runs} körningar");
             Console.WriteLine("Exempel på sorterad data:");
             foreach (var item in dataGenerator().Take(previewCount))
             {
                 Console.WriteLine(item);
             }
-            Console.WriteLine($"Resultatet loggades till '{LogFilePath}'");
+
+            Console.WriteLine($"Resultatet loggades till '{CsvFilePath}'");
+            Console.WriteLine($"--- Slut på benchmarking för {algorithmName} ---\n");
+        }
+
+        // 🔍 Benchmark för sökalgoritmer
+        public static void MeasureSearchExecutionTime<T>(
+            string algorithmName,
+            Func<IList<T>> dataGenerator,
+            Func<IList<T>, T, int> searchAlgorithm,
+            Func<IList<T>, T> targetSelector,
+            int runs = 5)
+        {
+            List<long> executionTimes = new();
+
+            Console.WriteLine($"\n--- Benchmarking Search: {algorithmName} ({runs} runs) ---");
+
+            for (int i = 0; i < runs; i++)
+            {
+                IList<T> data = dataGenerator().OrderBy(x => x).ToList(); // Sortera för binärsökning etc.
+                T target = targetSelector(data);
+
+                Stopwatch sw = Stopwatch.StartNew();
+                int result = searchAlgorithm(data, target);
+                sw.Stop();
+
+                long elapsed = sw.ElapsedMilliseconds;
+                executionTimes.Add(elapsed);
+
+                Console.WriteLine($"Run {i + 1}: {elapsed} ms, Resultatindex: {result}");
+            }
+
+            double avg = executionTimes.Average();
+            double stdDev = Math.Sqrt(executionTimes.Average(x => Math.Pow(x - avg, 2)));
+
+            Console.WriteLine($"Avg: {avg:F2} ms, StdDev: {stdDev:F2} ms över {runs} körningar");
             Console.WriteLine($"--- Slut på benchmarking för {algorithmName} ---\n");
         }
     }

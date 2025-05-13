@@ -21,8 +21,36 @@ namespace AlgorithmLib
         /// <returns>Index för träff eller -1 om inget hittas.</returns>
         public int BinarySearch(IList<T> collection, T target)
         {
-            throw new NotImplementedException();
+            if (collection == null || target == null)
+            {
+                throw new ArgumentNullException("Collection or target is null.");
+            }
+
+            int left = 0;
+            int right = collection.Count - 1;
+
+            while (left <= right)
+            {
+                int middle = left + (right - left) / 2;
+                int comparison = target.CompareTo(collection[middle]);
+
+                if (comparison == 0)
+                {
+                    return middle;
+                }
+                else if (comparison < 0)
+                {
+                    right = middle - 1;
+                }
+                else
+                {
+                    left = middle + 1;
+                }
+            }
+
+            return -1; // Target not found
         }
+
 
         /// <summary>
         /// Utför exponential search i en sorterad lista.
@@ -32,7 +60,28 @@ namespace AlgorithmLib
         /// <returns>Index för träff eller -1 om inget hittas.</returns>
         public int ExponentialSearch(IList<T> collection, T target)
         {
-            throw new NotImplementedException();
+            if (collection == null || target == null)
+            {
+                throw new ArgumentNullException("Collection or target is null.");
+            }
+
+            if (collection.Count == 0)
+            {
+                throw new ArgumentException("Collection is empty.");
+            }
+
+            if (collection[0].Equals(target))
+            {
+                return 0;
+            }
+
+            int bound = 1;
+            while (bound < collection.Count && collection[bound].CompareTo(target) < 0)
+            {
+                bound *= 2;
+            }
+
+            return BinarySearch(collection, target);
         }
 
         /// <summary>
