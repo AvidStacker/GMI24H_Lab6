@@ -10,7 +10,7 @@ namespace GMI24H_VT25_SortSearch_Labb_
         static void Main(string[] args)
         {
             //Här är kod som kan användas om man vill jobba med dataströmmar (som ligger i Generator-katalogen och skapas som ström utifrån en given seed). 
-            const int numberOfPosts = 10000000;
+            const int numberOfPosts = 100;
             const int seed = 123;
 
             var generator = new RandomLogGenerator();
@@ -36,6 +36,8 @@ namespace GMI24H_VT25_SortSearch_Labb_
             //Därför skapar vi en lista av strängar dit vi kan spara våra ip-adresser.
             //Vi använder LINQ för att selektera ut ip-adress-propertyn från varje enskilt logentry-post i logs-listan. 
             List<string> ipAddresses = logs.Select(entry => entry.IpAddress).ToList();
+            List<DateTime> timestamps = logs.Select(entry => entry.Timestamp).ToList();
+            List<int> statusCodes = logs.Select(entry => entry.StatusCode).ToList();
 
             //Från våra objekt, sorter och searcher, kan vi sedan anropa olika metoder där vi skickar in vår data som parametrar.
             //Det finns ingen implementation av bubblesort i SortingManager just nu. Det här metodanropet är
@@ -47,7 +49,9 @@ namespace GMI24H_VT25_SortSearch_Labb_
             //vi ska kunna mäta hur lång tid det tar att köra algoritmen kan vi använda
             //stopwatch och timespan 
             Stopwatch sw = Stopwatch.StartNew();
-            //TIPS1: det här är ett lämpligt ställe att placera körningen/anropet av din algoritm.
+            sorter.BubbleSort(ipAddresses);
+            sorter.BubbleSort(timestamps);
+            //sorter.BubbleSort(statusCodes);
             sw.Stop();
             TimeSpan elapsedTime = sw.Elapsed; //TIPS2: här är det kanske en bra idé att göra någonting med data som sparats i elapsedTime... 
                                                //Man kan ju till exempel tänka sig att det kan vara lämpligt att gå tillbaka till deluppgift 1 i labb 1

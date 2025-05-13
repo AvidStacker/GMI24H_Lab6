@@ -20,7 +20,27 @@ namespace AlgorithmLib
         /// <param name="collection">Listan som ska sorteras.</param>
         public void BubbleSort(IList<T> collection)
         {
-            throw new NotImplementedException();
+            bool swapped = true;
+            while (swapped)
+            {
+                swapped = false;
+                for (int i = 0; i < collection.Count - 1; i++)
+                {
+                    if (collection[i].CompareTo(collection[i + 1]) > 0)
+                    {
+                        T temp = collection[i + 1];
+                        collection[i + 1] = collection[i];
+                        collection[i] = temp;
+                        swapped = true;
+                    }
+                }
+            }
+
+            Console.WriteLine("Efterhandsvisning av loggdata");
+            foreach (T item in collection)
+            {
+                Console.WriteLine(item);
+            }
         }
 
         /// <summary>
