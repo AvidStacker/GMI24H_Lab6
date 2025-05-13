@@ -1,16 +1,17 @@
 ﻿using AlgorithmLib;
 using System.Diagnostics;
+using System.Net;
 
 
 namespace GMI24H_VT25_SortSearch_Labb_
 {
 
-    internal class Program
+    static class Program
     {
         static void Main(string[] args)
         {
             //Här är kod som kan användas om man vill jobba med dataströmmar (som ligger i Generator-katalogen och skapas som ström utifrån en given seed). 
-            const int numberOfPosts = 100;
+            const int numberOfPosts = 10000;
             const int seed = 123;
 
             var generator = new RandomLogGenerator();
@@ -27,7 +28,9 @@ namespace GMI24H_VT25_SortSearch_Labb_
             //Eftersom metoderna i SortingManager och SearchingManager-klasserna inte är statiska så behöver vi instansiera objekt av dessa klasser.
             //Eftersom vi gjort våra Sorting- och SearchingManager-klasserna generiska (<T>) behöver vi även ange vilken typ av data det
             //är som vi vill sortera eller söka efter. Vi anger datatyp i "diamanten" <>.
-            var sorter = new SortingManager<string>();
+            var stringSorter = new SortingManager<string>();
+            var dateSorter = new SortingManager<DateTime>();
+            var intSorter = new SortingManager<int>();
             var searcher = new SearchingManager<string>();
 
             //Välj vilka data som ska plockas ut ur loggarna och jämföras. T.ex. Int eller strängar. Här behöver
@@ -45,19 +48,73 @@ namespace GMI24H_VT25_SortSearch_Labb_
             //med LogParsern från textfilen. 
             //sorter.BubbleSort(ipAddresses); // <-- implementerar metod från SortingManager-classen som jag vill använda...
 
-            //För att
-            //vi ska kunna mäta hur lång tid det tar att köra algoritmen kan vi använda
-            //stopwatch och timespan 
-            Stopwatch sw = Stopwatch.StartNew();
-            sorter.BubbleSort(ipAddresses);
-            sorter.BubbleSort(timestamps);
-            //sorter.BubbleSort(statusCodes);
-            sw.Stop();
-            TimeSpan elapsedTime = sw.Elapsed; //TIPS2: här är det kanske en bra idé att göra någonting med data som sparats i elapsedTime... 
-                                               //Man kan ju till exempel tänka sig att det kan vara lämpligt att gå tillbaka till deluppgift 1 i labb 1
-                                               //och kolla hur ni gjorde med er data där...
+            Benchmark.MeasureExecutionTime(
+                "BubbleSort (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(), // regenerates from seed
+                list => stringSorter.BubbleSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureExecutionTime(
+                "BubbleSort (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
+                list => intSorter.BubbleSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureExecutionTime(
+                "BubbleSort (Timestamps)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
+                list => dateSorter.BubbleSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureExecutionTime(
+                "MergeSort (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
+                list => stringSorter.MergeSort(list, 0, list.Count-1),
+                runs: 5
+                );
+
+            Benchmark.MeasureExecutionTime(
+                "MergeSort (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
+                list => intSorter.MergeSort(list, 0, list.Count - 1),
+                runs: 5
+                );
+
+            Benchmark.MeasureExecutionTime(
+                "MergeSort (Timestamps)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
+                list => dateSorter.MergeSort(list, 0, list.Count - 1),
+                runs: 5
+                );
+
+            Benchmark.MeasureExecutionTime(
+                "QuickSort (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
+                list => stringSorter.QuickSort(list, 0, list.Count-1),
+                runs: 5
+            );
+
+            Benchmark.MeasureExecutionTime(
+                "QuickSort (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
+                list => intSorter.QuickSort(list, 0, list.Count - 1),
+                runs: 5
+            );
+
+            Benchmark.MeasureExecutionTime(
+                "QuickSort (Timestamp)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
+                list => dateSorter.QuickSort(list, 0, list.Count - 1),
+                runs: 5
+            );
+
 
             Console.WriteLine($"Totalt antal rader inlästa: {logs.Count}");
+
         }
+
     }
 }

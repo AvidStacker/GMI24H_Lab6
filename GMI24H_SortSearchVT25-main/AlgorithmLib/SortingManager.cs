@@ -35,12 +35,6 @@ namespace AlgorithmLib
                     }
                 }
             }
-
-            Console.WriteLine("Efterhandsvisning av loggdata");
-            foreach (T item in collection)
-            {
-                Console.WriteLine(item);
-            }
         }
 
         /// <summary>
