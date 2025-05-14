@@ -90,9 +90,41 @@ namespace AlgorithmLib
         /// <param name="collection">Sorterad lista av heltal.</param>
         /// <param name="target">Värdet som söks.</param>
         /// <returns>Index för träff eller -1 om inget hittas.</returns>
-        public int InterpolationSearch(IList<T> collection, T target)
+        public int InterpolationSearch(IList<T> collection, T target, Func<T, long> selector)
         {
-            throw new NotImplementedException();
+            if (collection == null || target == null)
+                throw new ArgumentNullException("Collection or target is null.");
+            if (collection.Count == 0)
+                throw new ArgumentException("Collection is empty.");
+
+            long targetVal = selector(target);
+            int low = 0;
+            int high = collection.Count - 1;
+
+            while (low <= high && selector(collection[low]) != selector(collection[high]))
+            {
+                long lowVal = selector(collection[low]);
+                long highVal = selector(collection[high]);
+
+                int pos = low + (int)((targetVal - lowVal) * (high - low) / (highVal - lowVal));
+
+                if (pos < low || pos > high)
+                    break;
+
+                long posVal = selector(collection[pos]);
+
+                if (posVal == targetVal)
+                    return pos;
+                else if (posVal < targetVal)
+                    low = pos + 1;
+                else
+                    high = pos - 1;
+            }
+
+            if (selector(collection[low]) == targetVal)
+                return low;
+
+            return -1;
         }
 
         /// <summary>

@@ -39,7 +39,7 @@ namespace AlgorithmLib
         /// <param name="sortedCollection">En sorterad lista med heltal.</param>
         /// <param name="target">Det heltalsvärde som söks efter.</param>
         /// <returns>Index för det hittade värdet, eller -1 om det inte finns.</returns>
-        int InterpolationSearch(IList<T> collection, T target);
+        int InterpolationSearch(IList<T> collection, T target, Func<T, long> selector);
 
         /// <summary>
         /// Utför Jump Search i en sorterad lista.
