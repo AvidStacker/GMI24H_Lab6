@@ -35,8 +35,8 @@ namespace AlgorithmLib
         /// Sorterar listan med hjälp av Merge Sort-algoritmen.
         /// </summary>
         /// <param name="collection">Listan som ska sorteras.</param>
-        /// <param name="l">Listan som ska sorteras.</param>        BEHÖVER KOMMENTERAS!!!
-        /// <param name="r">Listan som ska sorteras.</param>        BEHÖVER KOMMENTERAS!!!
+        /// <param name="l">Startindex för sorteringen.</param>
+        /// <param name="r">Slutindex för sorteringen.</param>
         void MergeSort(IList<T> collection, int l, int r);
 
         /// <summary>
@@ -49,9 +49,8 @@ namespace AlgorithmLib
         /// Sorterar listan med hjälp av Quick Sort.
         /// </summary>
         /// <param name="collection">Listan som ska sorteras.</param>
-        /// <param name="low">Listan som ska sorteras.</param>        BEHÖVER KOMMENTERAS!!!
-        /// <param name="high">Listan som ska sorteras.</param>        BEHÖVER KOMMENTERAS!!!
+        /// <param name="low">Startindex för sorteringen.</param>
+        /// <param name="high">Slutindex för sorteringen.</param>
         void QuickSort(IList<T> collection, int low, int high);
-
     }
 }

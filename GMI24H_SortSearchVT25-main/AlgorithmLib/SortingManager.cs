@@ -41,8 +41,8 @@ namespace AlgorithmLib
         /// Sorterar listan med Merge Sort-algoritmen.
         /// </summary>
         /// <param name="collection">Listan som ska sorteras.</param>
-        /// <param name="l">Listan som ska sorteras.</param>        BEHÖVER KOMMENTERAS!!!
-        /// <param name="r">Listan som ska sorteras.</param>        BEHÖVER KOMMENTERAS!!!
+        /// <param name="l">Startindex för sorteringen.</param>
+        /// <param name="r">Slutindex för sorteringen.</param>
         public void MergeSort(IList<T> collection, int l, int r)
         {
             if (l < r)
