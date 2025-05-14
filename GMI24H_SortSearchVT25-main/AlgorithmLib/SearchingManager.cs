@@ -103,7 +103,39 @@ namespace AlgorithmLib
         /// <returns>Index för träff eller -1 om inget hittas.</returns>
         public int JumpSearch(IList<T> collection, T target)
         {
-            throw new NotImplementedException();
+            if (collection == null || target == null)
+            {
+                throw new ArgumentNullException("Collection or target is null.");
+            }
+
+            int n = collection.Count;
+            if (n == 0)
+            {
+                throw new ArgumentException("Collection is empty.");
+            }
+
+            int step = (int)Math.Floor(Math.Sqrt(n));
+            int prev = 0;
+
+            while (prev < n && collection[Math.Min(step, n) - 1].CompareTo(target) < 0)
+            {
+                prev = step;
+                step += (int)Math.Floor(Math.Sqrt(n));
+                if (prev >= n)
+                {
+                    return -1;
+                }
+            }
+
+            for (int i = prev; i < Math.Min(step, n); i++)
+            {
+                if (collection[i].CompareTo(target) == 0)
+                {
+                    return i;
+                }
+            }
+
+            return -1; // Target not found
         }
 
         /// <summary>
@@ -114,7 +146,20 @@ namespace AlgorithmLib
         /// <returns>Index för träff eller -1 om inget hittas.</returns>
         public int LinearSearch(IList<T> collection, T target)
         {
-            throw new NotImplementedException();
+            if (collection == null || target == null)
+            {
+                throw new ArgumentNullException("Collection or target is null.");
+            }
+
+            for (int i = 0; i < collection.Count; i++)
+            {
+                if (collection[i].CompareTo(target) == 0)
+                {
+                    return i;
+                }
+            }
+
+            return -1; // Target not found
         }
     }
 }
