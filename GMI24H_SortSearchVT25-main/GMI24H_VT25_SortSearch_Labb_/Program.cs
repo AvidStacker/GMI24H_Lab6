@@ -10,7 +10,7 @@ namespace GMI24H_VT25_SortSearch_Labb_
     {
         static void Main(string[] args)
         {
-            //Här är kod som kan användas om man vill jobba med dataströmmar (som ligger i Generator-katalogen och skapas som ström utifrån en given seed). 
+            //Här är kod som kan användas om man vill jobba med dataströmmar (som ligger i Generator-katalogen och skapas som ström utifrån en given seed).
             const int numberOfPosts = 10000;
             const int seed = 123;
 
@@ -18,7 +18,7 @@ namespace GMI24H_VT25_SortSearch_Labb_
             var logs = generator.GenerateLogs(numberOfPosts, seed).ToList();
 
 
-            //Skriver ut de fem första posterna i listan med LogEntry-typer. 
+            //Skriver ut de fem första posterna i listan med LogEntry-typer.
             Console.WriteLine("förhandsvisning av loggdata:");
             foreach (var entry in logs.Take(5))
             {
@@ -39,15 +39,15 @@ namespace GMI24H_VT25_SortSearch_Labb_
             //vi tänka på att välja samma datatyp som vi vill köra våra algoritmer på, dvs. de vi bestämde oss för
             //när vi instansierade SortingManager och SearchingManager. I det här exemplet är det strängar.
             //Därför skapar vi en lista av strängar dit vi kan spara våra ip-adresser.
-            //Vi använder LINQ för att selektera ut ip-adress-propertyn från varje enskilt logentry-post i logs-listan. 
+            //Vi använder LINQ för att selektera ut ip-adress-propertyn från varje enskilt logentry-post i logs-listan.
             List<string> ipAddresses = logs.Select(entry => entry.IpAddress).ToList();
             List<int> statusCodes = logs.Select(entry => entry.StatusCode).ToList();
             List<DateTime> timestamps = logs.Select(entry => entry.Timestamp).ToList();
 
             //Från våra objekt, sorter och searcher, kan vi sedan anropa olika metoder där vi skickar in vår data som parametrar.
             //Det finns ingen implementation av bubblesort i SortingManager just nu. Det här metodanropet är
-            //enbart en referens för att visa hur ni kan anropa en metod och skicka er sampledata som ni hämtar 
-            //med LogParsern från textfilen. 
+            //enbart en referens för att visa hur ni kan anropa en metod och skicka er sampledata som ni hämtar
+            //med LogParsern från textfilen.
             //sorter.BubbleSort(ipAddresses); // <-- implementerar metod från SortingManager-classen som jag vill använda...
 
             Benchmark.MeasureSortExecutionTime(
@@ -146,12 +146,12 @@ namespace GMI24H_VT25_SortSearch_Labb_
             );
 
             Benchmark.MeasureSearchExecutionTime(
-                "ExponentialSearch (IP Adresses)",
+                "ExponentialSearch (IP Addresses)",
                 () => generator.GenerateLogs(numberOfPosts, seed)
                             .Select(log => log.IpAddress)
                             .OrderBy(ip => ip)
                             .ToList(),
-                (list, target) => stringSearcher.BinarySearch(list, target),
+                (list, target) => stringSearcher.ExponentialSearch(list, target),
                 list => list[list.Count / 2],
                 runs: 5
             );
@@ -162,22 +162,120 @@ namespace GMI24H_VT25_SortSearch_Labb_
                             .Select(log => log.StatusCode)
                             .OrderBy(ip => ip)
                             .ToList(),
-                (list, target) => intSearcher.BinarySearch(list, target),
+                (list, target) => intSearcher.ExponentialSearch(list, target),
                 list => list[list.Count / 2],
                 runs: 5
             );
-            
+
             Benchmark.MeasureSearchExecutionTime(
                 "ExponentialSearch (Timestamp)",
                 () => generator.GenerateLogs(numberOfPosts, seed)
                             .Select(log => log.Timestamp)
                             .OrderBy(ip => ip)
                             .ToList(),
-                (list, target) => dateSearcher.BinarySearch(list, target),
+                (list, target) => dateSearcher.ExponentialSearch(list, target),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "InterpolationSearch (IP Adresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.IpAddress)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => stringSearcher.InterpolationSearch(list, target, ip => ip.GetHashCode()),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "InterpolationSearch (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.StatusCode)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => intSearcher.InterpolationSearch(list, target, code => code),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "InterpolationSearch (Timestamp)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.Timestamp)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => dateSearcher.InterpolationSearch(list, target, timestamp => timestamp.Ticks),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "JumpSearch (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.IpAddress)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => stringSearcher.JumpSearch(list, target),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "JumpSearch (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.StatusCode)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => intSearcher.JumpSearch(list, target),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "JumpSearch (Timestamp)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.Timestamp)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => dateSearcher.JumpSearch(list, target),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "LinearSearch (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.IpAddress)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => stringSearcher.LinearSearch(list, target),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "LinearSearch (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.StatusCode)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => intSearcher.LinearSearch(list, target),
+                list => list[list.Count / 2],
+                runs: 5
+            );
+
+            Benchmark.MeasureSearchExecutionTime(
+                "LinearSearch (Timestamp)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                            .Select(log => log.Timestamp)
+                            .OrderBy(ip => ip)
+                            .ToList(),
+                (list, target) => dateSearcher.LinearSearch(list, target),
                 list => list[list.Count / 2],
                 runs: 5
             );
         }
-
     }
 }
