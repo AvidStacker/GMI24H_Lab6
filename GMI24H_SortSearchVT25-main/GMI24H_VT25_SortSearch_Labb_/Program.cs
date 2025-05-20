@@ -122,6 +122,48 @@ namespace GMI24H_VT25_SortSearch_Labb_
                 previewCount: 5
             );
 
+            Benchmark.MeasureSortExecutionTime(
+                "HeapSort (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
+                list => stringSorter.HeapSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureSortExecutionTime(
+                "HeapSort (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
+                list => intSorter.HeapSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureSortExecutionTime(
+                "HeapSort (Timestamps)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
+                list => dateSorter.HeapSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureSortExecutionTime(
+                "InsertionSort (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
+                list => stringSorter.InsertionSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureSortExecutionTime(
+                "InsertionSort (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
+                list => intSorter.InsertionSort(list),
+                runs: 5
+            );
+
+            Benchmark.MeasureSortExecutionTime(
+                "InsertionSort (Timestamps)",
+                () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
+                list => dateSorter.InsertionSort(list),
+                runs: 5
+            );
+
             Benchmark.MeasureSearchExecutionTime(
                 "BinarySearch (IP Addresses)",
                 () => generator.GenerateLogs(numberOfPosts, seed)
