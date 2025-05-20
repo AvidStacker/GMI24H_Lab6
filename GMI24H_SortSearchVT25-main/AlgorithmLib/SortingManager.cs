@@ -111,7 +111,35 @@ namespace AlgorithmLib
         /// <param name="collection">Listan som ska sorteras.</param>
         public void HeapSort(IList<T> collection)
         {
-            throw new NotImplementedException();
+            int n = collection.Count;
+
+            for (int i = n / 2 - 1; i >= 0; i--)
+                Heapify(collection, n, i);
+
+            for (int i = n - 1; i >= 0; i--)
+            {
+                Swap(collection, 0, i);
+                // Heapify den reducerade heapen
+                Heapify(collection, i, 0);
+            }
+        }
+
+        private void Heapify(IList<T> collection, int n, int i)
+        {
+            int largest = i; // Ställ in största som rot
+            int left = 2 * i + 1; // vänster = 2*i + 1
+            int right = 2 * i + 2; // höger = 2*i + 2
+
+            if (left < n && collection[left].CompareTo(collection[largest]) > 0)
+                largest = left;
+            if (right < n && collection[right].CompareTo(collection[largest]) > 0)
+                largest = right;
+            if (largest != i)
+            {
+                Swap(collection, i, largest);
+                // Rekursivt heapify den påverkade subträd
+                Heapify(collection, n, largest);
+            }
         }
 
         /// <summary>
@@ -120,7 +148,31 @@ namespace AlgorithmLib
         /// <param name="collection">Listan som ska sorteras.</param>
         public void InsertionSort(IList<T> collection)
         {
-            throw new NotImplementedException();
+            if (collection == null || collection.Count == 0)
+            {
+                return; // Ingen sortering behövs
+            }
+
+            if (collection.Count == 1)
+            {
+                return; // Ingen sortering behövs
+            }
+
+            for (int i = 1; i < collection.Count; i++)
+            {
+                T key = collection[i];
+                int j = i - 1;
+
+                if (collection[j].CompareTo(key) > 0)
+                {
+                    while (j >= 0 && collection[j].CompareTo(key) > 0)
+                    {
+                        collection[j + 1] = collection[j];
+                        j--;
+                    }
+                    collection[j + 1] = key;
+                }
+            }
         }
 
         /// <summary>
