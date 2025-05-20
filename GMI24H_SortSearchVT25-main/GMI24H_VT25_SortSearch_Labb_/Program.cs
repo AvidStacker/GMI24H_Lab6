@@ -54,63 +54,72 @@ namespace GMI24H_VT25_SortSearch_Labb_
                 "BubbleSort (IP Addresses)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
                 list => stringSorter.BubbleSort(list),
-                runs: 5
+                runs: 5,
+                previewCount: 5
             );
 
             Benchmark.MeasureSortExecutionTime(
                 "BubbleSort (Status Codes)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
                 list => intSorter.BubbleSort(list),
-                runs: 5
+                runs: 5,
+                previewCount: 5
             );
 
             Benchmark.MeasureSortExecutionTime(
                 "BubbleSort (Timestamps)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
                 list => dateSorter.BubbleSort(list),
-                runs: 5
+                runs: 5,
+                previewCount: 5
             );
 
             Benchmark.MeasureSortExecutionTime(
                 "MergeSort (IP Addresses)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
                 list => stringSorter.MergeSort(list, 0, list.Count-1),
-                runs: 5
+                runs: 5,
+                previewCount: 5
                 );
 
             Benchmark.MeasureSortExecutionTime(
                 "MergeSort (Status Codes)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
                 list => intSorter.MergeSort(list, 0, list.Count - 1),
-                runs: 5
+                runs: 5,
+                previewCount: 5
                 );
 
             Benchmark.MeasureSortExecutionTime(
                 "MergeSort (Timestamps)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
                 list => dateSorter.MergeSort(list, 0, list.Count - 1),
-                runs: 5
+                runs: 5,
+                previewCount: 5
                 );
 
             Benchmark.MeasureSortExecutionTime(
                 "QuickSort (IP Addresses)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
                 list => stringSorter.QuickSort(list, 0, list.Count-1),
-                runs: 5
+                runs: 5,
+                previewCount: 5
             );
 
             Benchmark.MeasureSortExecutionTime(
                 "QuickSort (Status Codes)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.StatusCode).ToList(),
                 list => intSorter.QuickSort(list, 0, list.Count - 1),
-                runs: 5
+                runs: 5,
+                previewCount: 5
             );
 
             Benchmark.MeasureSortExecutionTime(
                 "QuickSort (Timestamp)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.Timestamp).ToList(),
                 list => dateSorter.QuickSort(list, 0, list.Count - 1),
-                runs: 5
+                runs: 5,
+                previewCount: 5
             );
 
             Benchmark.MeasureSearchExecutionTime(
