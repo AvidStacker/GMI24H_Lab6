@@ -187,14 +187,22 @@ namespace AlgorithmLib
         /// <param name="high">End index of the range to sort.</param>
         public void QuickSort(IList<T> collection, int low, int high)
         {
-            if (low < high)
-            {
-                int pivotIndex = Partition(collection, low, high);
+            if (collection == null || collection.Count == 0)
+                return;
 
+            if (low >= high || low < 0 || high >= collection.Count)
+                return;
+
+            int pivotIndex = Partition(collection, low, high);
+
+            // Recursively sort elements before and after partition
+            if (pivotIndex > low)
                 QuickSort(collection, low, pivotIndex - 1);
+
+            if (pivotIndex < high)
                 QuickSort(collection, pivotIndex + 1, high);
-            }
         }
+
 
         /// <summary>
         /// Partitions the list and returns the pivot index used by Quick Sort.
