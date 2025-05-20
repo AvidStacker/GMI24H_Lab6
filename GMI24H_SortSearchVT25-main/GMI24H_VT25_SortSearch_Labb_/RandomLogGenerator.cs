@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 namespace GMI24H_VT25_SortSearch_Labb_
 {
     /// <summary>
-    /// En implementation av ILogGenerator som genererar loggposter
-    /// med hjälp av slumpmässiga värden men med en förutsägbar sekvens via seed.
+    /// Provides an implementation of <see cref="ILogGenerator"/> that produces a sequence of log entries
+    /// using pseudo-random values based on a provided seed.
+    /// This enables reproducible test scenarios with controlled randomness.
     /// </summary>
     public class RandomLogGenerator : ILogGenerator
     {
         /// <summary>
-        /// Genererar en angiven mängd loggposter med hjälp av slump, men återupprepningsbart med en seed.
+        /// Generates a specified number of <see cref="LogEntry"/> instances using pseudo-random values.
+        /// The sequence is repeatable for a given <paramref name="seed"/>.
         /// </summary>
-        /// <param name="count">Hur många loggposter som ska skapas.</param>
-        /// <param name="seed">Ett heltal som styr den slumpmässiga sekvensen (för reproducerbarhet).</param>
-        /// <returns>En IEnumerable med LogEntry-objekt.</returns>
+        /// <param name="count">The number of log entries to generate.</param>
+        /// <param name="seed">An integer seed to ensure reproducible randomness.</param>
+        /// <returns>An enumerable collection of generated <see cref="LogEntry"/> objects.</returns>
         public IEnumerable<LogEntry> GenerateLogs(int count, int seed)
         {
             var rand = new Random(seed);

@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 namespace AlgorithmLib
 {
     /// <summary>
-    /// <summary>
-    /// Implementation av olika sorteringsalgoritmer för generiska listor.
+    /// Implements various sorting algorithms for generic lists.
+    /// All elements must be comparable using IComparable&lt;T&gt;.
     /// </summary>
-    /// <typeparam name="T">Typen på elementen som ska sorteras. Måste implementera IComparable<T>.</typeparam>
+    /// <typeparam name="T">The type of elements to be sorted.</typeparam>
 
     public class SortingManager<T> : ISortingManager<T> where T : IComparable<T>
     {
         /// <summary>
-        /// Sorterar listan med Bubble Sort-algoritmen.
+        /// Sorts the list using the Bubble Sort algorithm.
+        /// Repeatedly swaps adjacent elements if they are in the wrong order.
         /// </summary>
-        /// <param name="collection">Listan som ska sorteras.</param>
+        /// <param name="collection">The list to sort.</param>
         public void BubbleSort(IList<T> collection)
         {
             bool swapped = true;
@@ -38,40 +39,39 @@ namespace AlgorithmLib
         }
 
         /// <summary>
-        /// Sorterar listan med Merge Sort-algoritmen.
+        /// Sorts the list using the Merge Sort algorithm.
+        /// A divide-and-conquer approach that splits the list and recursively merges sorted sublists.
         /// </summary>
-        /// <param name="collection">Listan som ska sorteras.</param>
-        /// <param name="l">Startindex för sorteringen.</param>
-        /// <param name="r">Slutindex för sorteringen.</param>
+        /// <param name="collection">The list to sort.</param>
+        /// <param name="l">Start index of the range to sort.</param>
+        /// <param name="r">End index of the range to sort.</param>
         public void MergeSort(IList<T> collection, int l, int r)
         {
             if (l < r)
             {
-                // Beräkna mittpunkten
                 int m = l + (r - l) / 2;
-                // Sortera första och andra halvan
                 MergeSort(collection, l, m);
                 MergeSort(collection, m + 1, r);
-                // Slå ihop de sorterade halvorna
                 Merge(collection, l, m, r);
             }
         }
 
+        /// <summary>
+        /// Merges two sorted subarrays within the list.
+        /// </summary>
         private void Merge(IList<T> collection, int l, int m, int r)
         {
-            // Beräkna storleken på de två delarna
             int n1 = m - l + 1;
             int n2 = r - m;
-            // Skapa temporära arrayer
+
             T[] L = new T[n1];
             T[] R = new T[n2];
-            // Kopiera data till temporära arrayer
+
             for (int i = 0; i < n1; i++)
                 L[i] = collection[l + i];
             for (int j = 0; j < n2; j++)
                 R[j] = collection[m + 1 + j];
-            // Slå ihop de temporära arrayerna
-            // Initiala index för första och andra delarna
+
             int k = l;
             int iIndex = 0;
             int jIndex = 0;
@@ -89,14 +89,14 @@ namespace AlgorithmLib
                 }
                 k++;
             }
-            // Kopiera resterande element från L[]
+
             while (iIndex < n1)
             {
                 collection[k] = L[iIndex];
                 iIndex++;
                 k++;
             }
-            // Kopiera resterande element från R[]
+
             while (jIndex < n2)
             {
                 collection[k] = R[jIndex];
@@ -106,9 +106,10 @@ namespace AlgorithmLib
         }
 
         /// <summary>
-        /// Sorterar listan med Heap Sort-algoritmen.
+        /// Sorts the list using the Heap Sort algorithm.
+        /// Converts the list into a max-heap and repeatedly extracts the largest element.
         /// </summary>
-        /// <param name="collection">Listan som ska sorteras.</param>
+        /// <param name="collection">The list to sort.</param>
         public void HeapSort(IList<T> collection)
         {
             int n = collection.Count;
@@ -119,16 +120,18 @@ namespace AlgorithmLib
             for (int i = n - 1; i >= 0; i--)
             {
                 Swap(collection, 0, i);
-                // Heapify den reducerade heapen
                 Heapify(collection, i, 0);
             }
         }
 
+        /// <summary>
+        /// Maintains the heap property for a subtree rooted at index i.
+        /// </summary>
         private void Heapify(IList<T> collection, int n, int i)
         {
-            int largest = i; // Ställ in största som rot
-            int left = 2 * i + 1; // vänster = 2*i + 1
-            int right = 2 * i + 2; // höger = 2*i + 2
+            int largest = i;
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
 
             if (left < n && collection[left].CompareTo(collection[largest]) > 0)
                 largest = left;
@@ -137,25 +140,25 @@ namespace AlgorithmLib
             if (largest != i)
             {
                 Swap(collection, i, largest);
-                // Rekursivt heapify den påverkade subträd
                 Heapify(collection, n, largest);
             }
         }
 
         /// <summary>
-        /// Sorterar listan med Insertion Sort-algoritmen.
+        /// Sorts the list using the Insertion Sort algorithm.
+        /// Efficient for small or nearly sorted lists.
         /// </summary>
-        /// <param name="collection">Listan som ska sorteras.</param>
+        /// <param name="collection">The list to sort.</param>
         public void InsertionSort(IList<T> collection)
         {
             if (collection == null || collection.Count == 0)
             {
-                return; // Ingen sortering behövs
+                return;
             }
 
             if (collection.Count == 1)
             {
-                return; // Ingen sortering behövs
+                return;
             }
 
             for (int i = 1; i < collection.Count; i++)
@@ -176,46 +179,48 @@ namespace AlgorithmLib
         }
 
         /// <summary>
-        /// Sorterar listan med Quick Sort-algoritmen.
+        /// Sorts the list using the Quick Sort algorithm.
+        /// Uses a pivot to recursively partition and sort sublists.
         /// </summary>
-        /// <param name="collection">Listan som ska sorteras.</param>
-        /// <param name="low">Startindex för sorteringen.</param>
-        /// <param name="high">Slutindex för sorteringen.</param>
+        /// <param name="collection">The list to sort.</param>
+        /// <param name="low">Start index of the range to sort.</param>
+        /// <param name="high">End index of the range to sort.</param>
         public void QuickSort(IList<T> collection, int low, int high)
         {
             if (low < high)
             {
-                // Partitionera arrayen och få pivotindex
                 int pivotIndex = Partition(collection, low, high);
 
-                // Sortera elementen före och efter partitionen
                 QuickSort(collection, low, pivotIndex - 1);
                 QuickSort(collection, pivotIndex + 1, high);
             }
         }
 
+        /// <summary>
+        /// Partitions the list and returns the pivot index used by Quick Sort.
+        /// </summary>
         private int Partition(IList<T> collection, int low, int high)
         {
-            T pivot = collection[high]; // Välj det sista elementet som pivot
-            int i = low - 1; // Index för det mindre elementet
+            T pivot = collection[high];
+            int i = low - 1;
 
             for (int j = low; j < high; j++)
             {
-                // Om det aktuella elementet är mindre än eller lika med pivot
                 if (collection[j].CompareTo(pivot) <= 0)
                 {
                     i++;
-                    // Byt plats på collection[i] och collection[j]
                     Swap(collection, i, j);
                 }
             }
 
-            // Byt plats på collection[i + 1] och collection[high] (eller pivot)
             Swap(collection, i + 1, high);
 
             return i + 1;
         }
 
+        /// <summary>
+        /// Swaps two elements in the list.
+        /// </summary>
         private void Swap(IList<T> collection, int i, int j)
         {
             T temp = collection[i];
@@ -224,9 +229,10 @@ namespace AlgorithmLib
         }
 
         /// <summary>
-        /// Sorterar listan med Selection Sort-algoritmen.
+        /// Sorts the list using the Selection Sort algorithm.
+        /// Repeatedly selects the smallest remaining element.
         /// </summary>
-        /// <param name="collection">Listan som ska sorteras.</param>
+        /// <param name="collection">The list to sort.</param>
         public void SelectionSort(IList<T> collection)
         {
             throw new NotImplementedException();

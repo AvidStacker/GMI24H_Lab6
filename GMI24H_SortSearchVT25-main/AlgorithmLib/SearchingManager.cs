@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 namespace AlgorithmLib
 {
     /// <summary>
-    /// Implementation av olika sökalgoritmer för generiska listor.
+    /// Provides generic implementations of various search algorithms for lists.
+    /// All algorithms operate on types that implement IComparable&lt;T&gt;.
     /// </summary>
-    /// <typeparam name="T">Typen på elementen som ska sökas i. Måste implementera IComparable<T>.</typeparam>
+    /// <typeparam name="T">The type of elements to search. Must be comparable.</typeparam>
 
     public class SearchingManager<T> : ISearchingManager<T> where T : IComparable<T>
     {
         /// <summary>
-        /// Utför binär sökning i en sorterad lista.
+        /// Performs a binary search on a sorted list.
         /// </summary>
-        /// <param name="collection">Sorterad lista att söka i.</param>
-        /// <param name="target">Värdet som söks.</param>
-        /// <returns>Index för träff eller -1 om inget hittas.</returns>
+        /// <param name="collection">A list sorted in ascending order.</param>
+        /// <param name="target">The element to search for.</param>
+        /// <returns>The index of the found element; otherwise, -1.</returns>
         public int BinarySearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)
@@ -53,11 +54,12 @@ namespace AlgorithmLib
 
 
         /// <summary>
-        /// Utför exponential search i en sorterad lista.
+        /// Performs exponential search on a sorted list.
+        /// Efficient for data where the target is likely to be located near the start of the list.
         /// </summary>
-        /// <param name="collection">Sorterad lista att söka i.</param>
-        /// <param name="target">Värdet som söks.</param>
-        /// <returns>Index för träff eller -1 om inget hittas.</returns>
+        /// <param name="collection">A list sorted in ascending order.</param>
+        /// <param name="target">The element to search for.</param>
+        /// <returns>The index of the found element; otherwise, -1.</returns>
         public int ExponentialSearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)
@@ -85,11 +87,13 @@ namespace AlgorithmLib
         }
 
         /// <summary>
-        /// Utför interpolationssökning. Endast för typer som är int-kompatibla.
+        /// Performs interpolation search on a sorted list of numeric data.
+        /// Best suited for uniformly distributed data types such as integers.
         /// </summary>
-        /// <param name="collection">Sorterad lista av heltal.</param>
-        /// <param name="target">Värdet som söks.</param>
-        /// <returns>Index för träff eller -1 om inget hittas.</returns>
+        /// <param name="collection">A list sorted in ascending order.</param>
+        /// <param name="target">The element to search for.</param>
+        /// <param name="selector">A function that maps the elements to numeric (long) values for interpolation calculation.</param>
+        /// <returns>The index of the found element; otherwise, -1.</returns>
         public int InterpolationSearch(IList<T> collection, T target, Func<T, long> selector)
         {
             if (collection == null || target == null)
@@ -128,11 +132,12 @@ namespace AlgorithmLib
         }
 
         /// <summary>
-        /// Utför jump search i en sorterad lista.
+        /// Performs jump search on a sorted list by dividing it into blocks.
+        /// Offers improved performance over linear search for larger sorted datasets.
         /// </summary>
-        /// <param name="collection">Sorterad lista att söka i.</param>
-        /// <param name="target">Värdet som söks.</param>
-        /// <returns>Index för träff eller -1 om inget hittas.</returns>
+        /// <param name="collection">A list sorted in ascending order.</param>
+        /// <param name="target">The element to search for.</param>
+        /// <returns>The index of the found element; otherwise, -1.</returns>
         public int JumpSearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)
@@ -171,11 +176,11 @@ namespace AlgorithmLib
         }
 
         /// <summary>
-        /// Utför linjär sökning i en lista.
+        /// Performs a linear (sequential) search over the entire list.
         /// </summary>
-        /// <param name="collection">Listan att söka i.</param>
-        /// <param name="target">Värdet som söks.</param>
-        /// <returns>Index för träff eller -1 om inget hittas.</returns>
+        /// <param name="collection">The list of elements to search.</param>
+        /// <param name="target">The element to locate.</param>
+        /// <returns>The index of the found element; otherwise, -1.</returns>
         public int LinearSearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)

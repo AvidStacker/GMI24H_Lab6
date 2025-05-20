@@ -6,28 +6,35 @@ using System.Net;
 namespace GMI24H_VT25_SortSearch_Labb_
 {
 
+    /// <summary>
+    /// Entry point of the application. Runs a series of benchmarks on sorting and searching algorithms
+    /// using generated HTTP log data.
+    /// </summary>
     static class Program
     {
+        /// <summary>
+        /// Main method that executes all sorting and searching benchmarks.
+        /// </summary>
+        /// <param name="args">Command-line arguments (not used).</param>
         static void Main(string[] args)
         {
-            //Här är kod som kan användas om man vill jobba med dataströmmar (som ligger i Generator-katalogen och skapas som ström utifrån en given seed).
+            // Configuration
             const int numberOfPosts = 10000;
             const int seed = 123;
 
+            // Initialize log data generator
             var generator = new RandomLogGenerator();
             var logs = generator.GenerateLogs(numberOfPosts, seed).ToList();
 
 
-            //Skriver ut de fem första posterna i listan med LogEntry-typer.
+            // Preview a few log entries
             Console.WriteLine("förhandsvisning av loggdata:");
             foreach (var entry in logs.Take(5))
             {
                 Console.WriteLine(entry);
             }
 
-            //Eftersom metoderna i SortingManager och SearchingManager-klasserna inte är statiska så behöver vi instansiera objekt av dessa klasser.
-            //Eftersom vi gjort våra Sorting- och SearchingManager-klasserna generiska (<T>) behöver vi även ange vilken typ av data det
-            //är som vi vill sortera eller söka efter. Vi anger datatyp i "diamanten" <>.
+            // Instantiate sorting and searching managers for different data types
             var stringSorter = new SortingManager<string>();
             var intSorter = new SortingManager<int>();
             var dateSorter = new SortingManager<DateTime>();
@@ -35,21 +42,13 @@ namespace GMI24H_VT25_SortSearch_Labb_
             var intSearcher = new SearchingManager<int>();
             var dateSearcher = new SearchingManager<DateTime>();
 
-            //Välj vilka data som ska plockas ut ur loggarna och jämföras. T.ex. Int eller strängar. Här behöver
-            //vi tänka på att välja samma datatyp som vi vill köra våra algoritmer på, dvs. de vi bestämde oss för
-            //när vi instansierade SortingManager och SearchingManager. I det här exemplet är det strängar.
-            //Därför skapar vi en lista av strängar dit vi kan spara våra ip-adresser.
-            //Vi använder LINQ för att selektera ut ip-adress-propertyn från varje enskilt logentry-post i logs-listan.
+            // Extract fields from logs to benchmark
             List<string> ipAddresses = logs.Select(entry => entry.IpAddress).ToList();
             List<int> statusCodes = logs.Select(entry => entry.StatusCode).ToList();
             List<DateTime> timestamps = logs.Select(entry => entry.Timestamp).ToList();
 
-            //Från våra objekt, sorter och searcher, kan vi sedan anropa olika metoder där vi skickar in vår data som parametrar.
-            //Det finns ingen implementation av bubblesort i SortingManager just nu. Det här metodanropet är
-            //enbart en referens för att visa hur ni kan anropa en metod och skicka er sampledata som ni hämtar
-            //med LogParsern från textfilen.
-            //sorter.BubbleSort(ipAddresses); // <-- implementerar metod från SortingManager-classen som jag vill använda...
-
+            // Sorting benchmarks
+            // Each benchmark re-generates data from the same seed to ensure consistency
             Benchmark.MeasureSortExecutionTime(
                 "BubbleSort (IP Addresses)",
                 () => generator.GenerateLogs(numberOfPosts, seed).Select(log => log.IpAddress).ToList(),
@@ -164,6 +163,8 @@ namespace GMI24H_VT25_SortSearch_Labb_
                 runs: 5
             );
 
+            // Search benchmarks
+            // Each data set is sorted beforehand as required by some search algorithms
             Benchmark.MeasureSearchExecutionTime(
                 "BinarySearch (IP Addresses)",
                 () => generator.GenerateLogs(numberOfPosts, seed)
