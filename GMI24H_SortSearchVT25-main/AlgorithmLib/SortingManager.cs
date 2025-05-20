@@ -243,7 +243,26 @@ namespace AlgorithmLib
         /// <param name="collection">The list to sort.</param>
         public void SelectionSort(IList<T> collection)
         {
-            throw new NotImplementedException();
+            if (collection == null || collection.Count == 0)
+            {
+                return;
+            }
+            if (collection.Count == 1)
+            {
+                return;
+            }
+            for (int i = 0; i < collection.Count - 1; i++)
+            {
+                int minIndex = i;
+                for (int j = i + 1; j < collection.Count; j++)
+                {
+                    if (collection[j].CompareTo(collection[minIndex]) < 0)
+                    {
+                        minIndex = j;
+                    }
+                }
+                Swap(collection, i, minIndex);
+            }
         }
     }
 }
