@@ -106,10 +106,11 @@ namespace GMI24H_VT25_SortSearch_Labb_
                 int result = searchAlgorithm(data, target);
                 sw.Stop();
 
-                long elapsed = sw.ElapsedMilliseconds;
-                executionTimes.Add(elapsed);
+                long ticks = sw.ElapsedTicks;
+                double microseconds = (double)ticks / Stopwatch.Frequency * 1_000_000;
+                executionTimes.Add((long)microseconds);
 
-                Console.WriteLine($"Run {i + 1}: {elapsed} ms, Resultatindex: {result}");
+                Console.WriteLine($"Run {i + 1}: {microseconds:F2} µs, Resultatindex: {result}");
             }
 
             double avg = executionTimes.Average();
