@@ -163,6 +163,36 @@ namespace GMI24H_VT25_SortSearch_Labb_
                 runs: 5
             );
 
+            Benchmark.MeasureSortExecutionTime(
+                "SelectionSort (IP Addresses)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                               .Select(log => log.IpAddress)
+                               .ToList(),
+                list => stringSorter.SelectionSort(list),
+                runs: 5,
+                previewCount: 5
+            );
+
+            Benchmark.MeasureSortExecutionTime(
+                "SelectionSort (Status Codes)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                               .Select(log => log.StatusCode)
+                               .ToList(),
+                list => intSorter.SelectionSort(list),
+                runs: 5,
+                previewCount: 5
+            );
+
+            Benchmark.MeasureSortExecutionTime(
+                "SelectionSort (Timestamps)",
+                () => generator.GenerateLogs(numberOfPosts, seed)
+                               .Select(log => log.Timestamp)
+                               .ToList(),
+                list => dateSorter.SelectionSort(list),
+                runs: 5,
+                previewCount: 5
+            );
+
             // Search benchmarks
             // Each data set is sorted beforehand as required by some search algorithms
             Benchmark.MeasureSearchExecutionTime(
