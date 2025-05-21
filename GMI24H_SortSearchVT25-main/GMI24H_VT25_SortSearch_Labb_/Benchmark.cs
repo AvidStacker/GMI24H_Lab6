@@ -28,7 +28,7 @@ namespace GMI24H_VT25_SortSearch_Labb_
             string algorithmName,
             Func<IList<T>> dataGenerator,
             Action<IList<T>> sortAlgorithm,
-            int runs = 5,
+            int runs = 100,
             int previewCount = 5)
         {
             List<long> executionTimes = new();
@@ -119,7 +119,7 @@ namespace GMI24H_VT25_SortSearch_Labb_
 
             for (int i = 0; i < runs; i++)
             {
-                IList<T> data = dataGenerator().OrderBy(x => x).ToList(); // Sortera för binärsökning etc.
+                IList<T> data = dataGenerator().OrderBy(x => x).ToList();
                 T target = targetSelector(data);
 
                 Stopwatch sw = Stopwatch.StartNew();
@@ -136,7 +136,7 @@ namespace GMI24H_VT25_SortSearch_Labb_
             double avg = executionTimes.Average();
             double stdDev = Math.Sqrt(executionTimes.Average(x => Math.Pow(x - avg, 2)));
 
-            Console.WriteLine($"Avg: {avg:F2} ms, StdDev: {stdDev:F2} ms över {runs} körningar");
+            Console.WriteLine($"Avg: {avg:F2} µs, StdDev: {stdDev:F2} µs över {runs} körningar");
             Console.WriteLine($"--- Slut på benchmarking för {algorithmName} ---\n");
         }
     }
