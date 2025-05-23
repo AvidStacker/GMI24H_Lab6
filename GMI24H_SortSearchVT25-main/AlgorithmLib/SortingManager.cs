@@ -21,6 +21,11 @@ namespace AlgorithmLib
         /// <param name="collection">The list to sort.</param>
         public void BubbleSort(IList<T> collection)
         {
+            if (collection == null || collection.Count == 0)
+                return;
+            if (collection.Count == 1)
+                return;
+
             bool swapped = true;
             while (swapped)
             {
@@ -47,6 +52,11 @@ namespace AlgorithmLib
         /// <param name="r">End index of the range to sort.</param>
         public void MergeSort(IList<T> collection, int l, int r)
         {
+            if (collection == null || collection.Count == 0)
+                return;
+            if (collection.Count == 1)
+                return;
+
             if (l < r)
             {
                 int m = l + (r - l) / 2;
@@ -152,14 +162,9 @@ namespace AlgorithmLib
         public void InsertionSort(IList<T> collection)
         {
             if (collection == null || collection.Count == 0)
-            {
                 return;
-            }
-
             if (collection.Count == 1)
-            {
                 return;
-            }
 
             for (int i = 1; i < collection.Count; i++)
             {
@@ -189,7 +194,8 @@ namespace AlgorithmLib
         {
             if (collection == null || collection.Count == 0)
                 return;
-
+            if (collection.Count == 1)
+                return;
             if (low >= high || low < 0 || high >= collection.Count)
                 return;
 
@@ -244,13 +250,10 @@ namespace AlgorithmLib
         public void SelectionSort(IList<T> collection)
         {
             if (collection == null || collection.Count == 0)
-            {
                 return;
-            }
             if (collection.Count == 1)
-            {
                 return;
-            }
+
             for (int i = 0; i < collection.Count - 1; i++)
             {
                 int minIndex = i;

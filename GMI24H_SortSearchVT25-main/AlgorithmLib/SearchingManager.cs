@@ -23,9 +23,9 @@ namespace AlgorithmLib
         public int BinarySearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)
-            {
                 throw new ArgumentNullException("Collection or target is null.");
-            }
+            if (collection.Count == 0)
+                throw new ArgumentException("Collection is empty.");
 
             int left = 0;
             int right = collection.Count - 1;
@@ -63,14 +63,9 @@ namespace AlgorithmLib
         public int ExponentialSearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)
-            {
                 throw new ArgumentNullException("Collection or target is null.");
-            }
-
             if (collection.Count == 0)
-            {
                 throw new ArgumentException("Collection is empty.");
-            }
 
             if (collection[0].Equals(target))
             {
@@ -100,6 +95,11 @@ namespace AlgorithmLib
                 throw new ArgumentNullException("Collection or target is null.");
             if (collection.Count == 0)
                 throw new ArgumentException("Collection is empty.");
+
+            if (collection[0].Equals(target))
+            {
+                return 0;
+            }
 
             long targetVal = selector(target);
             int low = 0;
@@ -141,14 +141,19 @@ namespace AlgorithmLib
         public int JumpSearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)
-            {
                 throw new ArgumentNullException("Collection or target is null.");
-            }
+            if (collection.Count == 0)
+                throw new ArgumentException("Collection is empty.");
 
             int n = collection.Count;
             if (n == 0)
             {
                 throw new ArgumentException("Collection is empty.");
+            }
+
+            if (collection[0].Equals(target))
+            {
+                return 0;
             }
 
             int step = (int)Math.Floor(Math.Sqrt(n));
@@ -184,8 +189,13 @@ namespace AlgorithmLib
         public int LinearSearch(IList<T> collection, T target)
         {
             if (collection == null || target == null)
-            {
                 throw new ArgumentNullException("Collection or target is null.");
+            if (collection.Count == 0)
+                throw new ArgumentException("Collection is empty.");
+
+            if (collection[0].Equals(target))
+            {
+                return 0;
             }
 
             for (int i = 0; i < collection.Count; i++)

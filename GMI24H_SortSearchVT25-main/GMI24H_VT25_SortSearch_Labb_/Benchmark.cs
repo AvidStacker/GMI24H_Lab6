@@ -22,7 +22,7 @@ namespace GMI24H_VT25_SortSearch_Labb_
         /// <param name="algorithmName">A descriptive name of the algorithm.</param>
         /// <param name="dataGenerator">A delegate that returns a fresh data set for each run.</param>
         /// <param name="sortAlgorithm">The sorting method to benchmark.</param>
-        /// <param name="runs">Number of repetitions to perform (default is 5).</param>
+        /// <param name="runs">Number of repetitions to perform (default is 100).</param>
         /// <param name="previewCount">Number of items to preview before/after sorting (default is 5).</param>
         public static void MeasureSortExecutionTime<T>(
             string algorithmName,
